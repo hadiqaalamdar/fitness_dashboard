@@ -728,9 +728,12 @@ else:
 
 # Filter by activity type
 if selected_activities:
-    filtered_df = filtered_df[filtered_df['Activity Type'].apply(
-        lambda x: any(act in x for act in selected_activities)
-    )]
+    def activity_matches(activity_type_str):
+        # Split the comma-separated activities and check for exact matches
+        activities_in_row = [a.strip() for a in activity_type_str.split(',')]
+        return any(act in activities_in_row for act in selected_activities)
+    
+    filtered_df = filtered_df[filtered_df['Activity Type'].apply(activity_matches)]
 
 # Filter by location
 if selected_locations:
