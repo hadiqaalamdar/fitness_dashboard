@@ -95,12 +95,7 @@ st.markdown("""
         padding: 1rem 3rem 2rem 3rem;
         max-width: 1400px;
     }
-    
-    /* Reduce top header space */
-    header[data-testid="stHeader"] {
-        height: 0;
-        min-height: 0;
-    }
+
     
     /* Custom headers */
     h1, h2, h3, h4, h5, h6 {
@@ -911,7 +906,7 @@ with col3:
     st.markdown(f"""
     <div style="background: linear-gradient(145deg, #1A1A2E 0%, #252542 100%); border: 1px solid rgba(78, 205, 196, 0.2); border-radius: 16px; padding: 1.2rem 1.5rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); transition: all 0.3s ease; min-height: 120px;">
         <p style="color: #6B6B80; font-size: 0.75rem; margin: 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500; white-space: nowrap;">Avg Calories/Day</p>
-        <p style="color: #FFFFFF; font-size: 2rem; font-weight: 700; margin: 0.5rem 0 0.3rem 0; font-family: 'Outfit', sans-serif;">{avg_daily_calories:,.0f}</p>
+        <p style="color: #FFFFFF; font-size: 2rem; font-weight: 700; margin: 0.5rem 0 0.3rem 0; font-family: 'Outfit', sans-serif;">{avg_daily_calories:,.0f} kcal</p>
         <p style="color: #A0A0B0; font-size: 0.85rem; margin: 0;">Total: {total_calories:,.0f} kcal</p>
     </div>
     """, unsafe_allow_html=True)
@@ -929,7 +924,7 @@ with col5:
     st.markdown(f"""
     <div style="background: linear-gradient(145deg, #1A1A2E 0%, #252542 100%); border: 1px solid rgba(78, 205, 196, 0.2); border-radius: 16px; padding: 1.2rem 1.5rem; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); transition: all 0.3s ease; min-height: 120px;">
         <p style="color: #6B6B80; font-size: 0.75rem; margin: 0; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500; white-space: nowrap;">Avg Heart Pts/Day</p>
-        <p style="color: #FFFFFF; font-size: 2rem; font-weight: 700; margin: 0.5rem 0 0.3rem 0; font-family: 'Outfit', sans-serif;">{avg_daily_heart_points:,.0f}</p>
+        <p style="color: #FFFFFF; font-size: 2rem; font-weight: 700; margin: 0.5rem 0 0.3rem 0; font-family: 'Outfit', sans-serif;">{avg_daily_heart_points:,.0f} pts</p>
         <p style="color: #A0A0B0; font-size: 0.85rem; margin: 0;">Total: {total_heart_points:,.0f}</p>
     </div>
     """, unsafe_allow_html=True)
@@ -1118,7 +1113,8 @@ with col1:
             opacity=0.6,
             text=[f"{last_week_exercise:.0f} min", f"{last_week_steps:,.0f}"],
             textposition='outside',
-            textfont=dict(color='#A0A0B0', size=10)
+            textfont=dict(color='#A0A0B0', size=10),
+            hovertemplate="<b>Last Week</b><br>%{x}: %{text}<extra></extra>"
         ))
         
         fig_compare.add_trace(go.Bar(
@@ -1128,7 +1124,8 @@ with col1:
             marker_color=COLORS['teal'],
             text=[f"{this_week_exercise:.0f} min", f"{this_week_steps:,.0f}"],
             textposition='outside',
-            textfont=dict(color='#FFFFFF', size=10)
+            textfont=dict(color='#FFFFFF', size=10),
+            hovertemplate="<b>This Week</b><br>%{x}: %{text}<extra></extra>"
         ))
         
         fig_compare.update_layout(
@@ -1152,7 +1149,14 @@ with col1:
                 x=0.5,
                 font=dict(color='#A0A0B0', size=10)
             ),
-            bargap=0.25
+            bargap=0.25,
+            hoverlabel=dict(
+                bgcolor='#1A1A2E',
+                font_size=12,
+                font_family='Outfit',
+                font_color='#FFFFFF',
+                bordercolor='#4ECDC4'
+            )
         )
         st.plotly_chart(fig_compare, use_container_width=True)
         
@@ -1402,7 +1406,7 @@ with col3:
         st.markdown(f"""
         <div style="background: linear-gradient(145deg, #1A1A2E, #252542); border-radius: 16px; padding: 1.5rem; border: 1px solid rgba(108, 99, 255, 0.3); box-shadow: 0 0 20px rgba(108, 99, 255, 0.1); text-align: center;">
             <p style="color: #6C63FF; font-size: 0.75rem; margin: 0; text-transform: uppercase; letter-spacing: 1px;">🥇 Most Calories</p>
-            <p style="color: white; font-size: 2rem; font-weight: 700; margin: 0.5rem 0;">{max_calories_row['Calories (kcal)']:,.0f}</p>
+            <p style="color: white; font-size: 2rem; font-weight: 700; margin: 0.5rem 0;">{max_calories_row['Calories (kcal)']:,.0f} kcal</p>
             <p style="color: #6B6B80; font-size: 0.85rem; margin: 0;">{max_calories_row['Date'].strftime('%d %b %Y')}</p>
         </div>
         """, unsafe_allow_html=True)
@@ -1766,7 +1770,7 @@ with tab3:
                     gridcolor='rgba(78, 205, 196, 0.1)'
                 ),
                 yaxis=dict(
-                    title=dict(text="kcal vs Previous Day", font=dict(color='#A0A0B0')),
+                    title=dict(text="kcal change vs Previous Day", font=dict(color='#A0A0B0')),
                     tickfont=dict(color='#A0A0B0'),
                     gridcolor='rgba(78, 205, 196, 0.1)',
                     zeroline=False
@@ -1774,6 +1778,7 @@ with tab3:
                 showlegend=False
             )
             st.plotly_chart(fig_calorie_change, use_container_width=True)
+            st.markdown("<p style='color: #6B6B80; font-size: 0.75rem; margin-top: -10px; text-align: center;'>Green = burned more than yesterday • Red = burned fewer than yesterday</p>", unsafe_allow_html=True)
         
         with col2:
             # Calorie trend with 7-day rolling average
@@ -1852,78 +1857,173 @@ heatmap_metric = st.selectbox(
     label_visibility="collapsed"
 )
 
-# Get the latest year's data for a cleaner view
-latest_year = calendar_data['Year'].max()
-year_data = calendar_data[calendar_data['Year'] == latest_year].copy()
+# Get unique years in selected date range
+years_in_range = sorted(calendar_data['Year'].unique(), reverse=True)
 
-if len(year_data) > 0:
-    # Create a complete date range for the year
-    year_start = pd.Timestamp(f"{latest_year}-01-01")
-    year_end = min(pd.Timestamp(f"{latest_year}-12-31"), df['Date'].max())
-    all_dates = pd.date_range(start=year_start, end=year_end, freq='D')
+# Calculate date range span
+if len(date_range) == 2:
+    date_span_days = (pd.Timestamp(date_range[1]) - pd.Timestamp(date_range[0])).days
+else:
+    date_span_days = 0
+
+# Show multi-year view if range spans more than 365 days
+show_multi_year = date_span_days > 365 and len(years_in_range) > 1
+
+if show_multi_year:
+    st.markdown(f"<p style='color: #6B6B80; font-size: 0.8rem; margin-bottom: 1rem;'>Showing {len(years_in_range)} years of data</p>", unsafe_allow_html=True)
     
-    complete_calendar = pd.DataFrame({'Date': all_dates})
-    complete_calendar['Week'] = complete_calendar['Date'].dt.isocalendar().week
-    complete_calendar['Day'] = complete_calendar['Date'].dt.dayofweek
-    complete_calendar['Month'] = complete_calendar['Date'].dt.month
+    # Create a heatmap for each year
+    for year in years_in_range:
+        year_data = calendar_data[calendar_data['Year'] == year].copy()
+        
+        if len(year_data) > 0:
+            # Create a complete date range for the year
+            year_start = pd.Timestamp(f"{year}-01-01")
+            year_end = pd.Timestamp(f"{year}-12-31")
+            
+            # Clip to the filtered date range
+            if len(date_range) == 2:
+                year_start = max(year_start, pd.Timestamp(date_range[0]))
+                year_end = min(year_end, pd.Timestamp(date_range[1]))
+            
+            all_dates = pd.date_range(start=year_start, end=year_end, freq='D')
+            
+            complete_calendar = pd.DataFrame({'Date': all_dates})
+            complete_calendar['Week'] = complete_calendar['Date'].dt.isocalendar().week
+            complete_calendar['Day'] = complete_calendar['Date'].dt.dayofweek
+            complete_calendar['Month'] = complete_calendar['Date'].dt.month
+            
+            # Merge with actual data
+            year_data['Date'] = pd.to_datetime(year_data['Date'])
+            complete_calendar = complete_calendar.merge(
+                year_data[['Date', heatmap_metric]], 
+                on='Date', 
+                how='left'
+            )
+            complete_calendar[heatmap_metric] = complete_calendar[heatmap_metric].fillna(0)
+            
+            # Pivot for heatmap format
+            heatmap_pivot = complete_calendar.pivot_table(
+                index='Day', 
+                columns='Week', 
+                values=heatmap_metric, 
+                aggfunc='sum'
+            )
+            
+            # Day labels
+            day_labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            
+            fig_heatmap = go.Figure(data=go.Heatmap(
+                z=heatmap_pivot.values,
+                x=heatmap_pivot.columns,
+                y=day_labels,
+                colorscale=[
+                    [0, '#1A1A2E'],
+                    [0.25, '#2D4A4A'],
+                    [0.5, '#3D7A7A'],
+                    [0.75, '#4ECDC4'],
+                    [1, '#6FEDD6']
+                ],
+                hovertemplate="Week %{x}<br>%{y}<br>Value: %{z:,.0f}<extra></extra>",
+                showscale=True,
+                colorbar=dict(
+                    title=dict(text=heatmap_metric.split('(')[0].strip(), font=dict(color='#A0A0B0')),
+                    tickfont=dict(color='#A0A0B0'),
+                    bgcolor='rgba(0,0,0,0)'
+                )
+            ))
+            
+            fig_heatmap.update_layout(
+                title=dict(text=str(year), font=dict(color='#FFFFFF', size=16), x=0.01),
+                paper_bgcolor='rgba(0,0,0,0)',
+                plot_bgcolor='rgba(0,0,0,0)',
+                margin=dict(l=50, r=20, t=40, b=20),
+                height=200,
+                xaxis=dict(
+                    title=dict(text="Week", font=dict(color='#A0A0B0', size=10)),
+                    tickfont=dict(color='#A0A0B0', size=10),
+                    dtick=4
+                ),
+                yaxis=dict(
+                    tickfont=dict(color='#A0A0B0'),
+                    autorange='reversed'
+                )
+            )
+            st.plotly_chart(fig_heatmap, use_container_width=True)
+
+else:
+    # Single year view (original behavior)
+    latest_year = calendar_data['Year'].max()
+    year_data = calendar_data[calendar_data['Year'] == latest_year].copy()
     
-    # Merge with actual data
-    year_data['Date'] = pd.to_datetime(year_data['Date'])
-    complete_calendar = complete_calendar.merge(
-        year_data[['Date', heatmap_metric]], 
-        on='Date', 
-        how='left'
-    )
-    complete_calendar[heatmap_metric] = complete_calendar[heatmap_metric].fillna(0)
-    
-    # Create heatmap
-    # Pivot for heatmap format
-    heatmap_pivot = complete_calendar.pivot_table(
-        index='Day', 
-        columns='Week', 
-        values=heatmap_metric, 
-        aggfunc='sum'
-    )
-    
-    # Day labels
-    day_labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    
-    fig_heatmap = go.Figure(data=go.Heatmap(
-        z=heatmap_pivot.values,
-        x=heatmap_pivot.columns,
-        y=day_labels,
-        colorscale=[
-            [0, '#1A1A2E'],
-            [0.25, '#2D4A4A'],
-            [0.5, '#3D7A7A'],
-            [0.75, '#4ECDC4'],
-            [1, '#6FEDD6']
-        ],
-        hovertemplate="Week %{x}<br>%{y}<br>Value: %{z:,.0f}<extra></extra>",
-        showscale=True,
-        colorbar=dict(
-            title=dict(text=heatmap_metric.split('(')[0].strip(), font=dict(color='#A0A0B0')),
-            tickfont=dict(color='#A0A0B0'),
-            bgcolor='rgba(0,0,0,0)'
+    if len(year_data) > 0:
+        # Create a complete date range for the year
+        year_start = pd.Timestamp(f"{latest_year}-01-01")
+        year_end = min(pd.Timestamp(f"{latest_year}-12-31"), df['Date'].max())
+        all_dates = pd.date_range(start=year_start, end=year_end, freq='D')
+        
+        complete_calendar = pd.DataFrame({'Date': all_dates})
+        complete_calendar['Week'] = complete_calendar['Date'].dt.isocalendar().week
+        complete_calendar['Day'] = complete_calendar['Date'].dt.dayofweek
+        complete_calendar['Month'] = complete_calendar['Date'].dt.month
+        
+        # Merge with actual data
+        year_data['Date'] = pd.to_datetime(year_data['Date'])
+        complete_calendar = complete_calendar.merge(
+            year_data[['Date', heatmap_metric]], 
+            on='Date', 
+            how='left'
         )
-    ))
-    
-    fig_heatmap.update_layout(
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-        margin=dict(l=50, r=20, t=30, b=20),
-        height=250,
-        xaxis=dict(
-            title=dict(text=f"Week of {latest_year}", font=dict(color='#A0A0B0')),
-            tickfont=dict(color='#A0A0B0', size=10),
-            dtick=4
-        ),
-        yaxis=dict(
-            tickfont=dict(color='#A0A0B0'),
-            autorange='reversed'
+        complete_calendar[heatmap_metric] = complete_calendar[heatmap_metric].fillna(0)
+        
+        # Create heatmap
+        # Pivot for heatmap format
+        heatmap_pivot = complete_calendar.pivot_table(
+            index='Day', 
+            columns='Week', 
+            values=heatmap_metric, 
+            aggfunc='sum'
         )
-    )
-    st.plotly_chart(fig_heatmap, use_container_width=True)
+        
+        # Day labels
+        day_labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        
+        fig_heatmap = go.Figure(data=go.Heatmap(
+            z=heatmap_pivot.values,
+            x=heatmap_pivot.columns,
+            y=day_labels,
+            colorscale=[
+                [0, '#1A1A2E'],
+                [0.25, '#2D4A4A'],
+                [0.5, '#3D7A7A'],
+                [0.75, '#4ECDC4'],
+                [1, '#6FEDD6']
+            ],
+            hovertemplate="Week %{x}<br>%{y}<br>Value: %{z:,.0f}<extra></extra>",
+            showscale=True,
+            colorbar=dict(
+                title=dict(text=heatmap_metric.split('(')[0].strip(), font=dict(color='#A0A0B0')),
+                tickfont=dict(color='#A0A0B0'),
+                bgcolor='rgba(0,0,0,0)'
+            )
+        ))
+        
+        fig_heatmap.update_layout(
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=50, r=20, t=30, b=20),
+            height=250,
+            xaxis=dict(
+                title=dict(text=f"Week of {latest_year}", font=dict(color='#A0A0B0')),
+                tickfont=dict(color='#A0A0B0', size=10),
+                dtick=4
+            ),
+            yaxis=dict(
+                tickfont=dict(color='#A0A0B0'),
+                autorange='reversed'
+            )
+        )
+        st.plotly_chart(fig_heatmap, use_container_width=True)
 # =============================================================================
 # SECTION 8: YEAR COMPARISON
 # =============================================================================
