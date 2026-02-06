@@ -940,7 +940,7 @@ st.markdown("---")
 # SECTION 2: ACTIVITY OVERVIEW
 # =============================================================================
 
-st.markdown("## 📊 Activity Overview")
+st.markdown("## Activity Overview")
 
 col1, col2 = st.columns([1, 2])
 
@@ -1076,7 +1076,7 @@ with col2:
 # SECTION 4: PATTERNS & INSIGHTS
 # =============================================================================
 
-st.markdown("## 🔍 Patterns & Insights")
+st.markdown("## Patterns & Insights")
 
 col1, col2, col3 = st.columns(3)
 
@@ -1361,7 +1361,7 @@ with col3:
 # SECTION 5: PERSONAL RECORDS
 # =============================================================================
 
-st.markdown("## 🏆 Personal Records")
+st.markdown("## Personal Records")
 
 # Calculate records
 daily_records = filtered_df.groupby('Date').agg({
@@ -1411,7 +1411,7 @@ with col3:
 # SECTION 6: LOCATION ANALYSIS
 # =============================================================================
 
-st.markdown("## 🗺️ Location Analysis")
+st.markdown("## Location Analysis")
 
 col1, col2 = st.columns([2, 1])
 
@@ -1523,13 +1523,13 @@ with col2:
 # SECTION 7: DETAILED BREAKDOWN
 # =============================================================================
 
-st.markdown("## 📈 Detailed Breakdown")
+st.markdown("## Detailed Breakdown")
 
-tab1, tab2, tab3 = st.tabs(["📊 Exercise by Type", "❤️ Heart Health", "📈 Calorie Trends"])
+tab1, tab2, tab3 = st.tabs(["Exercise by Type", "Heart Health", "Calorie Trends"])
 
 with tab1:
     # Stacked area chart for exercise types over time
-    st.markdown("<p style='color: #6B6B80; font-size: 0.85rem; margin: 0 0 15px 0;'>📊 Track how your walking, cycling, running, and paced walking activities change over time</p>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #6B6B80; font-size: 0.85rem; margin: 0 0 15px 0;'>Track how your walking, cycling, running, and paced walking activities change over time</p>", unsafe_allow_html=True)
     exercise_by_type = filtered_df.copy()
     exercise_by_type['Walking (min)'] = exercise_by_type['Walking duration (ms)'].fillna(0) / 60000
     exercise_by_type['Cycling (min)'] = exercise_by_type['Cycling duration (ms)'].fillna(0) / 60000
@@ -1835,7 +1835,7 @@ with tab3:
 # SECTION 3: CALENDAR HEATMAP
 # =============================================================================
 
-st.markdown("## 🗓️ Activity Calendar")
+st.markdown("## Activity Calendar")
 
 # Create calendar heatmap data
 calendar_data = daily_agg[['Date', 'Step count', 'Total Exercise (min)', 'Calories (kcal)']].copy()
